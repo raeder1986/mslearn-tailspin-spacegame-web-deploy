@@ -86,7 +86,7 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
-              azureSubscription: 'c2cb3940-082c-48c3-ba45-06302a879e0f'
+              azureSubscription: LL-ZKR
               appType: 'webApp'
               appName: '$(WebAppName)'
               deployToSlotOrASE: true
