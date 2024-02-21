@@ -85,7 +85,7 @@ stages:
           steps:
           - task: AzureKeyVault@2
             inputs:
-              azureSubscription: LL-ZKR
+              azureSubscription: LL_SP
               KeyVaultName: '$(KVname)'
               SecretsFilter: '*'
               RunAsPreJob: false
@@ -94,7 +94,7 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
-              azureSubscription: LL-ZKR
+              azureSubscription: LL_SP
               appType: 'webApp'
               appName: '$(WebAppName)'
               deployToSlotOrASE: true
