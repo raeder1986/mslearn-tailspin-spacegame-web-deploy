@@ -86,7 +86,7 @@ stages:
           - task: AzurePowerShell@5
             displayName: 'Get Agent public ip'
             inputs:
-              azureSubscription: test
+              azureSubscription: LL_SP
               ScriptType: InlineScript
               Inline: |
                 $ipAddr = (Invoke-WebRequest -uri "http://ifconfig.me/ip").Content
