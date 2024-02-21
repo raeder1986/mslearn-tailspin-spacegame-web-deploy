@@ -83,14 +83,41 @@ stages:
       runOnce:
         deploy:
           steps:
+          - task: AzurePowerShell@5
+            displayName: 'Get Agent public ip'
+            inputs:
+              azureSubscription: test
+              ScriptType: InlineScript
+              Inline: |
+                $ipAddr = (Invoke-WebRequest -uri "http://ifconfig.me/ip").Content
+              azurePowerShellVersion: LatestVersion
+              
+          - task: AzureCLI@1
+            name: AddFirewallRule
+            displayName: 'Add Firewall Rule to Azure Key Vault'
+            inputs:
+              azureSubscription: LL_SP
+              scriptLocation: 'inlineScript'
+              inlineScript: 'az keyvault network-rule add --resource-group $(KVrg) --name $(KVname) --ip-address $(ipAddr)'
+              
           - task: AzureKeyVault@2
             inputs:
               azureSubscription: LL_SP
               KeyVaultName: '$(KVname)'
               SecretsFilter: '*'
               RunAsPreJob: false
+              
           - download: current
             artifact: drop
+            
+          - task: AzureCLI@1
+            name: RemoveFirewallRule
+            displayName: 'Remove Firewall Rule from Azure Key Vault'
+            inputs:
+              azureSubscription: LL_SP
+              scriptLocation: 'inlineScript'
+              inlineScript: 'az keyvault network-rule remove --resource-group $(KVrg) --name $(KVname) --ip-address $(ipAddr)/32'
+            
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
